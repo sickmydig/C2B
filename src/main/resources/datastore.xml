@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datastore-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<!-- Database connection configuration -->
+	
+	<!-- aws dev server -->
+	<database>
+		<url>jdbc:sqlserver://localhost:14330;databaseName=b2b;user=sa;password=C0mmander</url>
+		<username>sa</username>
+		<password>C0mmander</password>
+	</database>
+	
+	<ars_database>
+	    <url>jdbc:sqlserver://localhost;databaseName=b2b;user=sa;password=C0mmander</url>
+		<username>sa</username>
+		<password>C0mmander</password>
+	</ars_database>
+	
+	<!-- Authentication configuration -->
+	<authentication scheme="HTTP_MAC">
+		<endpoints>
+			<endpoint type="authorization">/auth/</endpoint>
+			<endpoint type="introspection">/token/verify/</endpoint>
+			<endpoint type="revocation">/token/revoke/</endpoint>
+		</endpoints>
+		<oauth>
+			<client id="YpcZjUa1GZGan1QX" secret="nsGtxKpmrlVYpfvoYY3FCBXg4hVT3NpJjAlLGUzHl7QPC1vgynF6j1sarnRPr1wit5VueM1AMiUGhDYSopwYDAYfBwpzWCU1zyhDmLIaI7J2OBgtsPLUjCqZcQ8wnQOv"></client>
+			<scope>readonly forget_password reset_password</scope>
+		</oauth>
+		<token algorithm="hmac-sha-256">
+			<encryption>
+				<path>/WEB-INF/classes/public_key.der</path>
+			</encryption>
+			<decryption>
+				<path>/WEB-INF/classes/private_key.der</path>
+			</decryption>
+			<issuer>esquel.cn</issuer>
+		</token>
+	</authentication>
+	
+	<!-- Authorization configuration -->
+	<credentials>
+		<user type="com.esquel.b2b.schema.User">
+			<resource protected="false">
+				<class>com.esquel.b2b.resource.UserServerResource</class>
+				<uri trailing-slash-optional="true" identity="username">/users/</uri>
+				<actions>
+					<action name="reset_password" class="com.joyaether.datastore.security.CredentialSecretServerResource" identity="username" />
+					<action name="forget_password" class="com.esquel.b2b.resource.ForgetPasswordServerResource" identity="username" />
+				</actions>
+			</resource>
+		</user>
+	</credentials>
+	
+	<!-- Logging configuration -->
+	<logging enabled="true">
+		<!--
+		<resource>
+			<uri trailing-slash-optional="true" identity="log_id">/logs/</uri>
+		</resource>
+		-->
+	</logging>
+	
+	<!-- Metadata endpoints -->
+	<!--
+	<metadata>
+		<manifest>
+			<resource>
+				<uri trailing-slash-optional="true" identity="name">/manifests/</uri>
+			</resource>
+		</manifest>
+		<operation>
+			<resource>
+				<uri trailing-slash-optional="true" identity="operation_id">/operations/</uri>
+			</resource>
+		</operation>
+	</metadata>
+	-->
+	
+	<!-- Application services configurations -->
+	<services>
+		<task pool-size="10" />
+	</services>
+	
+	<!-- Resource endpoints -->
+	<resources> 
+ 		<resource protected="false"> 
+ 			<class>com.esquel.b2b.resource.CompanyServerResource</class>
+ 			<uri identity="company_id" trailing-slash-optional="true">/companies/</uri>
+ 		</resource>
+ 		
+ 	</resources> 
+</datastore-app>
